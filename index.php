@@ -1,3 +1,10 @@
+<?php
+		if(isset($_SESSION['status']))
+		{
+			echo  $_SESSION['status'];
+			unset( $_SESSION['status']);
+		}
+		?>
 <!DOCTYPE html>
 
 <html>
@@ -33,6 +40,7 @@
       </li>
       <li><a href="#">About</a></li>
       <li><a href="#">Contact Us</a></li>
+      <li><a href="admin login.php">Admin</a></li>
     </ul>
   </nav>
 </div>

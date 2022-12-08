@@ -1,5 +1,31 @@
 <?php
-session_start();
+    session_start();
+    include('connection.php');
+    if(isset($_POST['signin'])){
+		$name = $_POST['user_name'];
+		$password = $_POST['u_password'];
+        $stmt = $conn->prepare("SELECT user_name,user_email,u_password FROM user WHERE user_name = ? AND u_password = ? LIMIT  1");
+        $stmt->bind_param('ss',$name,$password);
+        if($stmt ->execute()){
+            $stmt ->bind_result($user_name,$user_email,$u_password);
+            $stmt ->store_result();
+            if($stmt->num_rows() == 1){
+           //$row = $stmt -> fetch();
+                $stmt -> fetch();
+                $_SESSION['user_name'] = $name;
+                $_SESSION['u_password'] = $password;
+                $_SESSION['logged_in'] = true;
+
+                header('location: user dashboard.php?message= logged in successfully');
+            }else{
+                header('location: login.php?error= Could not verify your account');
+            }
+        }else{
+            //error
+            header('location: login.php?error=something went wrong');
+		}
+	}
+
 ?>
 
 <!DOCTYPE html>
@@ -28,11 +54,17 @@ session_start();
 			unset( $_SESSION['status']);
 		}
 		?>
-				<form>
+				<form method="POST" action="login.php">
+					<p style="color:red;"><?php 
+					if(isset($_GET['error']))
+					{
+						echo $_GET['error'];
+					}
+					?></p>
 					<label for="chk" aria-hidden="true">Log In</label>
-					<input type="email" name="email" placeholder="Email" required="">
-					<input type="password" name="pswd" placeholder="Password" required="">
-					<button >Log In</button>
+					<input type="text" name="user_name" placeholder="User name" required="">
+					<input type="password" name="u_password" placeholder="Password" required="">
+					<button name="signin">log In</button>
 					<button class="signupp"><a href="signup.php">Sign Up</a></button>
 					</div>
 				</form>

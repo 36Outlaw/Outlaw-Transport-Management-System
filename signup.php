@@ -14,7 +14,7 @@ if (isset($_POST['signup'])){
 	}
 	else
 	{
-		$stmt=$conn->prepare("SELECT count(*) FROM signup where user_email=?");
+		$stmt=$conn->prepare("SELECT count(*) FROM user where user_email=?");
 		$stmt->bind_param('s',$email);
 		$stmt->execute();
 		$stmt->bind_result($num_rows);
@@ -24,7 +24,7 @@ if (isset($_POST['signup'])){
 			header('location: login.php?error=user with this email already exists');
 		}
 		else{
-			$stmt=$conn -> prepare("INSERT INTO signup(user_name,user_email,user_address,user_number,u_password) VALUES (?,?,?,?,?)");
+			$stmt=$conn -> prepare("INSERT INTO user(user_name,user_email,user_address,user_number,u_password) VALUES (?,?,?,?,?)");
 			$stmt->bind_param('sssss',$name,$email,$address,$number,$password);
 			if($stmt->execute())
 			{
